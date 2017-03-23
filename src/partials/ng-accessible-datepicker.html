@@ -1,0 +1,61 @@
+<div className='date-picker'>
+    <input type='text' ng-model='selectedDate'>
+    <button ng-click='togglePicker()'>ICON</button>
+    <div ng-if=open>
+        <div>
+            <h2 class="year">
+                <button
+                    ng-disabled='!prevYearValid()'
+                    ng-click='prevYear()'
+                >previous year</button>
+                {{ refDate | date:'yyyy' }}
+                <button
+                    ng-disabled='!nextYearValid()'
+                    ng-click='nextYear()'
+                >next year</button>
+            </h2>
+            <h2 class="adp-month">
+                <button
+                    ng-disabled='!prevMonthValid()'
+                    ng-click='prevMonth()'
+                >previous month</button>
+                {{ refDate | date:'MMMM' }}
+                <button
+                    ng-disabled='!nextMonthValid()'
+                    ng-click='nextMonth()'
+                >next month</button>
+            </h2>
+        </div>
+        <table ng-repeat='(i, month) in displayedCalendars'>
+            <thead>
+                <tr>
+                    <td>S</td>
+                    <td>M</td>
+                    <td>T</td>
+                    <td>W</td>
+                    <td>T</td>
+                    <td>F</td>
+                    <td>S</td>
+                </tr>
+            </thead>
+            <tbody>
+                <tr ng-repeat='(ii, week) in month'>
+                    <td ng-repeat='(iii, d) in week'>
+                        <button
+                            ng-click='handleClick(d)'
+                            ng-class='{
+                                "kdp-date-selected" : d.date === selectedDate,
+                                "kdp-date-disabled" : d.disabled,
+                                "kdp-date-today" : d.today
+                            }'
+                            ng-model=d
+                            ng-disabled=d.outside || d.disabled
+                        >
+                            {{d.date.getDate()}}
+                        </button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
