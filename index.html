@@ -11,8 +11,11 @@
   .kdp-date-today{
     background: blue;
   }
-  .kdp-date-selected{
+  .kdp-date-start{
     background: green;
+  }
+  .kdp-date-end{
+    background: purple;
   }
   .kdp-date-disabled{
     background: red;
@@ -23,14 +26,32 @@
 <body>
   <div ng-app='app'>
     <div ng-controller='mehController' >
-      <date-picker min=minDate max=maxDate rangeShown=3 />
 
       <h2>options</h2>
       <ul>
-        <li>initDate: if you want to load a different date to today as current - accepts a js Date object</li>
-        <li>min: minimum/earliest date that you can select (all dates earlier are disabled) - accepts a js Date object</li>
-        <li>max: maximum/latest date that can be selected - accepts a js Date object</li>
+        <li>
+          <input type="date" ng-model='initDate'>
+          <strong>initDate</strong> if you want to load a different date to today as current - accepts a Date object
+        </li>
+        <li>
+          <input type="date" ng-model='minDate'>
+          <strong>min</strong> minimum/earliest date that you can select (all dates earlier are disabled) - accepts a Date object
+        </li>
+        <li>
+          <input type="date" ng-model='maxDate'>
+          <strong>max</strong> maximum/latest date that can be selected - accepts a js Date object
+        </li>
+        <li>
+          <input type="radio" name="range" value="true" ng-model='range' checked> True
+          <input type="radio" name="range" value="false" ng-model='range'> False
+          <strong>range</strong> boolean - select both a start and finish date
+        </li>
+        <li>
+          <input type="number" ng-model='rangeShown'>
+          <strong>range-shown</strong> how many calendar months to show at a time
+        </li>
       </ul>
+      <date-picker min=minDate max=maxDate range-shown=1 range=true />
 
     </div>
   </div>

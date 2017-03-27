@@ -7,6 +7,11 @@ app.controller('mehController', function ($scope) {
   $scope.maxDate = new Date('2019/04/20');
 });
 
+// TODO:
+// add end date for range
+// handle clicking again on start data
+
+
 app.directive('datePicker', function () {
     return {
         scope: {
@@ -15,7 +20,7 @@ app.directive('datePicker', function () {
           min: '=',
           max: '=',
           range: '=',
-          rangeShown: '='
+          rangeShown: '@'
         },
         restrict: 'AE',
         replace: 'true',
@@ -25,10 +30,6 @@ app.directive('datePicker', function () {
           // some initial variables
           var today = scope.initDate || new Date();
           var refDate = angular.copy(today);
-          var months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
-
-          // all the heavy data will kept in here
-          scope.displayedCalendars = [];
 
           // toggle open/close on datepicker
           scope.togglePicker = function () {
@@ -37,7 +38,27 @@ app.directive('datePicker', function () {
 
           // handle select/deselect - keeping here incase we build more into it
           scope.handleClick = function (d) {
-            scope.selectedDate = d.date;
+            // if date is already the selected date, unselect
+            if (scope.startDate === d.date) {
+              scope.startDate = null;
+            } else {
+              // if range of dates is required
+              if (scope.range) {
+                if (!scope.startDate || d.date < scope.startDate) {
+                  scope.startDate = d.date;
+                  scope.endDate = null;
+                } else {
+                  scope.endDate = d.date;
+                }
+              } else {
+                scope.startDate = d.date;
+              }
+            }
+          };
+
+          // show the month name for the current calendar
+          scope.displayMonthName = function (i) {
+            return (new Date(refDate.getYear(), refDate.getMonth() + i, 1));
           };
 
           scope.prevMonthValid = function () {
@@ -86,8 +107,8 @@ app.directive('datePicker', function () {
           };
 
           // evaluate if date is inside current month
-          var isOutside = function (d) {
-            return (d.getMonth() !== refDate.getMonth());
+          var isOutside = function (d, i) {
+            return (d.getMonth() !== refDate.getMonth() + i);
           };
 
           // check if date is between min and max dates
@@ -96,6 +117,8 @@ app.directive('datePicker', function () {
           };
 
           var buildCalendar = function () {
+            // all the heavy data will kept in here
+            scope.displayedCalendars = [];
 
             var cm = 0;
             scope.refDate = refDate;
@@ -116,7 +139,7 @@ app.directive('datePicker', function () {
                 while (wd < 7) {
                   var dayToAdd = {
                     date: date,
-                    outside: isOutside(date),
+                    outside: isOutside(date, cm),
                     today: isToday(date),
                     disabled: isDisabled(date)
                   };
@@ -125,31 +148,14 @@ app.directive('datePicker', function () {
                   wd++;
                 }
                 currentMonthView.push(week);
-                debugger
                 mw++;
-              };
+              }
               scope.displayedCalendars.push(currentMonthView);
               cm++;
-            };
-            debugger
+            }
           };
 
           buildCalendar();
-
-
-
-          // var days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
-
-
-
-
-          // open/close datepicker when button is clicked
-          // elem.find('button').bind('click', function () {
-          //   scope.$apply(function () {
-          //     scope.togglePicker();
-          //   });
-          // });
-
         }
     };
 });

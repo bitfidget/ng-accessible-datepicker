@@ -29,6 +29,9 @@
         <table ng-repeat='(i, month) in displayedCalendars'>
             <thead>
                 <tr>
+                    <td colspan='7'>{{ displayMonthName(i) | date:'MMMM' }}</td>
+                </tr>
+                <tr>
                     <td>S</td>
                     <td>M</td>
                     <td>T</td>
@@ -44,7 +47,8 @@
                         <button
                             ng-click='handleClick(d)'
                             ng-class='{
-                                "kdp-date-selected" : d.date === selectedDate,
+                                "kdp-date-start" : d.date === startDate,
+                                "kdp-date-end" : d.date === endDate,
                                 "kdp-date-disabled" : d.disabled,
                                 "kdp-date-today" : d.today
                             }'
