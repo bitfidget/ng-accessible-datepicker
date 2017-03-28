@@ -4,8 +4,7 @@
   <meta charset="UTF-8">
   <title>Date picker</title>
 
-  <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.4.2/angular.min.js"></script>
-  <script src="/library/vendor/scripts/dateparser/DateParser.js" type="text/javascript"></script>
+
 
 <style>
   .kdp-date-today{
@@ -42,20 +41,24 @@
           <strong>max</strong> maximum/latest date that can be selected - accepts a js Date object
         </li>
         <li>
-          <input type="radio" name="range" value="true" ng-model='range' checked> True
-          <input type="radio" name="range" value="false" ng-model='range'> False
-          <strong>range</strong> boolean - select both a start and finish date
+          <input type="radio" name="range" ng-click="toggleRange(true)" ng-checked='range'> True
+          <input type="radio" name="range" ng-click="toggleRange(false)" ng-checked='!range'> False
+          <strong>range</strong> boolean - select both a start and finish date {{range}}
         </li>
         <li>
           <input type="number" ng-model='rangeShown'>
           <strong>range-shown</strong> how many calendar months to show at a time
         </li>
       </ul>
-      <date-picker min=minDate max=maxDate range-shown=1 range=true />
+
+      <date-picker init-date=initDate min=minDate max=maxDate range-shown=rangeShown range=range />
 
     </div>
   </div>
 
+<script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.4.2/angular.min.js"></script>
+<script src="/library/vendor/scripts/dateparser/DateParser.js" type="text/javascript"></script>
+<script src='/src/scripts/app.js'></script>
 <script src='/src/scripts/ng-accessible-datepicker.js'></script>
 
 

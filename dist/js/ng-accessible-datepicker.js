@@ -1,34 +1,33 @@
 // ng-accessible-datepicker.js
 
-var app = angular.module('app', []);
-
-app.controller('mehController', function ($scope) {
-  $scope.minDate = new Date('2017/02/03');
-  $scope.maxDate = new Date('2019/04/20');
-});
-
 // TODO:
 // add end date for range
-// handle clicking again on start data
+// handle clicking again on start date
+// indicate the direction of the start date (mark the intended range)
 
 
 app.directive('datePicker', function () {
     return {
         scope: {
           format: '@',
-          initDate: '@',
+          initDate: '=',
           min: '=',
           max: '=',
           range: '=',
-          rangeShown: '@'
+          rangeShown: '='
         },
         restrict: 'AE',
         replace: 'true',
         templateUrl: '/src/partials/ng-accessible-datepicker.html',
         link: function (scope, elem, attrs) {
 
+          scope.$watch('[initDate, min, max, rangeShown, range]', function () {
+            buildCalendar();
+            console.log('local range = ' + scope.initDate)
+          });
+
           // some initial variables
-          var today = scope.initDate || new Date();
+          var today = new Date();
           var refDate = angular.copy(today);
 
           // toggle open/close on datepicker
@@ -43,7 +42,7 @@ app.directive('datePicker', function () {
               scope.startDate = null;
             } else {
               // if range of dates is required
-              if (scope.range) {
+              if (scope.range === true) {
                 if (!scope.startDate || d.date < scope.startDate) {
                   scope.startDate = d.date;
                   scope.endDate = null;
@@ -117,8 +116,13 @@ app.directive('datePicker', function () {
           };
 
           var buildCalendar = function () {
+
+            // catch the initDate variable if exists
+            today = scope.initDate || today;
+
             // all the heavy data will kept in here
             scope.displayedCalendars = [];
+            scope.startDate = null;
 
             var cm = 0;
             scope.refDate = refDate;
