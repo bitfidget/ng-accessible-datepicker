@@ -26,6 +26,8 @@ Hightlight the selected range.
 
 Show the enddate when range is selected.
 
+Tests!
+
 
 ### to run:
 
